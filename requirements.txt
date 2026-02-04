@@ -1,0 +1,53 @@
+# ======================== Core ML / AI ========================
+#torch==2.6.0+cu124
+#torchvision==0.21.0+cu124
+#torchaudio==2.6.0+cu124
+
+transformers>=4.36,<5.0
+sentence-transformers>=2.2,<3.0
+
+# ======================== Scientific Computing ========================
+numpy>=2.0,<2.3
+
+# ======================== Document Processing ========================
+
+
+docling-core[chunking]==2.50.1
+docling==2.69.1
+
+
+#docling>=2.0.0,<3.0
+docling-surya==0.1.0
+surya-ocr==0.17.0
+PyMuPDF>=1.24.0
+Pillow>=10.0.0
+
+# ======================== Vector Database ========================
+#qdrant-client>=1.7.0
+
+# ======================== LLM Integration ========================
+openai>=1.12.0
+langchain-openai>=0.1.0
+
+# ======================== UI / Display ========================
+rich>=13.0.0
+typing-extensions>=4.8.0
+
+# ======================== Web Crawling ========================
+playwright>=1.40.0
+requests>=2.31.0
+aiofiles>=23.0.0
+aiohttp>=3.9.0
+langdetect>=1.0.9
+
+# ======================== Web Framework ========================
+fastapi>=0.109.0
+pydantic>=2.0.0
+
+# ======================== Configuration ========================
+python-dotenv>=1.0.0
+
+# ======================== Database ========================
+qdrant-client>=1.13.3
+pymongo>=4.6.0
+motor>=3.3.0
