@@ -69,6 +69,14 @@ class ProcessorWorker(BaseWorker):
         Returns:
             True if successful
         """
+        # Defensive check: ensure task is correct type
+        if not isinstance(task, ProcessTask):
+            logger.error(
+                f"[{self.worker_id}] Received wrong task type: {type(task).__name__}. "
+                f"Expected ProcessTask. Skipping task."
+            )
+            return False
+        
         task.mark_started(self.worker_id)
         
         page = task.page
@@ -332,12 +340,6 @@ class ProcessorWorker(BaseWorker):
                 file_size=int(pdf_size_mb * 1024 * 1024),
                 crawl_depth=page.depth if hasattr(page, 'depth') else 0,
                 status=DocumentStatus.STORED,  # Mark as stored, not processed
-                metadata={
-                    "reason": "large_file_skipped_processing",
-                    "size_mb": pdf_size_mb,
-                    "website_url": website_url,
-                    "timestamp": datetime.utcnow().isoformat(),
-                }
             )
             
             logger.info(

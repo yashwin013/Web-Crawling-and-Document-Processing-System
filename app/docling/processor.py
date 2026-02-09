@@ -157,8 +157,8 @@ class AsyncDocumentProcessor:
         # Feature settings
         pipeline_options.do_code_enrichment = False  # Disable if not needed (faster)
         pipeline_options.do_formula_enrichment = False  # Disable if not needed (faster)
-        pipeline_options.do_table_structure = True
-        pipeline_options.images_scale = 1.5  # Lower scale = faster (was 2.0)
+        pipeline_options.do_table_structure = True  # Set to False if tables not needed (20% faster)
+        pipeline_options.images_scale = 1.0  # Lower = faster (1.0 is fastest, 1.5 balanced, 2.0 quality)
         pipeline_options.generate_page_images = False  # Disable if not needed (faster)
         pipeline_options.allow_external_plugins = True  # Enable to use surya-ocr plugin
         

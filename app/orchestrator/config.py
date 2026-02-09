@@ -13,12 +13,12 @@ class WorkerConfig:
     """Configuration for worker pools."""
     
     # CPU-bound workers (I/O heavy, can run many)
-    crawler_workers: int = 3
-    processor_workers: int = 4
-    storage_workers: int = 2
+    crawler_workers: int = 5  # Increased from 3 (more concurrent crawling)
+    processor_workers: int = 6  # Increased from 4 (handle more text processing)
+    storage_workers: int = 3  # Increased from 2 (faster storage writes)
     
     # GPU-bound workers (GPU bottleneck, keep minimal)
-    pdf_workers: int = 1  # Docling PDF processing (GPU)
+    pdf_workers: int = 2  # Increased from 1 (if GPU available, 2-3 can run in parallel)
     ocr_workers: int = 1
     
     @property
@@ -38,19 +38,19 @@ class QueueConfig:
     """Configuration for queue sizes (backpressure control)."""
     
     # Website URL queue
-    crawl_queue_size: int = 10
+    crawl_queue_size: int = 20  # Increased from 10 (more URLs can be queued)
     
     # Raw pages waiting for processing (text extraction, chunking)
-    processing_queue_size: int = 50
+    processing_queue_size: int = 100  # Increased from 50 (reduce backpressure)
     
     # PDFs waiting for Docling processing (GPU bottleneck - keep small!)
-    pdf_queue_size: int = 10
+    pdf_queue_size: int = 25  # Increased from 10 (was at 100% capacity)
     
     # Pages waiting for OCR (GPU bottleneck - keep small!)
     ocr_queue_size: int = 10
     
     # Processed chunks waiting for storage
-    storage_queue_size: int = 100
+    storage_queue_size: int = 200  # Increased from 100 (more buffer for storage)
     
     @property
     def total_queue_capacity(self) -> int:
@@ -96,8 +96,8 @@ class RecoveryConfig:
     
     # Worker-specific timeouts (seconds)
     crawler_timeout: float = 300.0  # 5 minutes
-    processor_timeout: float = 180.0  # 3 minutes
-    pdf_timeout: float = 240.0  # 4 minutes (increased from 120s)
+    processor_timeout: float = 300.0  # 5 minutes (increased from 180s - too short)
+    pdf_timeout: float = 240.0  # 4 minutes
     ocr_timeout: float = 300.0  # 5 minutes
     storage_timeout: float = 120.0  # 2 minutes
 

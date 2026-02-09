@@ -355,14 +355,31 @@ class MultiSiteOrchestrator:
             
             # Check for deadlock: if nothing has been processed for too long
             current_processed = self.stats.total_tasks_processed
+            
+            # Count active workers to avoid false stall warnings
+            all_workers = (
+                self.crawler_workers +
+                self.processor_workers +
+                self.pdf_workers +
+                self.ocr_workers +
+                self.storage_workers
+            )
+            busy_workers_count = sum(1 for worker in all_workers if worker.is_busy)
+            
+            # Only warn about stall if no progress AND no workers are busy
             if current_processed == last_processed_count:
-                stalled_iterations += 1
-                if stalled_iterations >= max_stalled_iterations:
-                    logger.warning(
-                        f"⚠ Pipeline appears stalled! No progress for {stalled_iterations * self.config.monitoring_interval_seconds}s"
-                    )
-                    logger.warning("This may indicate hung workers or blocked queues.")
-                    logger.warning("Continuing to wait, but consider restarting if this persists...")
+                if busy_workers_count == 0:
+                    # Truly stalled - no progress and no workers working
+                    stalled_iterations += 1
+                    if stalled_iterations >= max_stalled_iterations:
+                        logger.warning(
+                            f"⚠ Pipeline appears stalled! No progress for {stalled_iterations * self.config.monitoring_interval_seconds}s"
+                        )
+                        logger.warning("This may indicate hung workers or blocked queues.")
+                        logger.warning("Continuing to wait, but consider restarting if this persists...")
+                else:
+                    # Workers are busy, so this is normal - reset counter
+                    stalled_iterations = 0
             else:
                 stalled_iterations = 0  # Reset counter if progress was made
                 last_processed_count = current_processed

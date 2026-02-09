@@ -69,6 +69,14 @@ class CrawlerWorker(BaseWorker):
         Returns:
             True if successful
         """
+        # Defensive check: ensure task is correct type
+        if not isinstance(task, CrawlTask):
+            logger.error(
+                f"[{self.worker_id}] Received wrong task type: {type(task).__name__}. "
+                f"Expected CrawlTask. Skipping task."
+            )
+            return False
+        
         task.mark_started(self.worker_id)
         
         logger.info(
